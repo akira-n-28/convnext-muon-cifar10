@@ -96,10 +96,6 @@ maps based on Global Average Pooling. Applying spatial shifts (cropping) or refl
 at inference time distorts the global spatial priors the SE gates rely on, leading to miscalibrated 
 channel re-weighting. For this architecture, a single raw forward pass yields the true peak performance.
 
-**5. Set `min_lr > 0` in cosine schedule.** With `min_lr=0`, the final ~50 epochs
-run at LR ≈ 1e-13 and contribute nothing. `min_lr=1e-6` (0.1% of peak) keeps the
-EMA gently improving through the very end.
-
 ## Repository structure
 
 ```
