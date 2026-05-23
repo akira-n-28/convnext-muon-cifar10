@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.ipynb_checkpoints/
+
+# Virtual envs
+venv/
+env/
+.venv/
+
+# Datasets
+data/
+*.tar.gz
+cifar-10-batches-py/
+
+# Checkpoints (use HF Hub or GitHub Releases instead)
+*.pt
+*.pth
+*.ckpt
+
+# Logs
+*.log
+wandb/
+runs/
+lightning_logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# OS
+Thumbs.db
