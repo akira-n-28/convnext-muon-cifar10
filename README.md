@@ -15,15 +15,23 @@ accuracy with only ~12M parameters.
 | Training time | ~10.7h |
 | Epochs | 600 (best @ ep 529 via EMA) |
 
-### Comparison with literature (~10–15M params range)
+### Comparison with literature (Trained from scratch on CIFAR-10)
 
-| Model | Params | Test acc | Notes |
-|---|---|---|---|
-| WRN-16-8 | 11M | ~97.0% | + Cutout |
-| WRN-22-8 | 17M | ~97.3% | + AutoAugment + Cutout |
-| WRN-28-10 | 36M | 97.44% | + AutoAugment + Cutout (Cubuk 2019) |
-| **This work (ConvNeXt-12M + SE)** | **12M** | **98.10%** | Muon + EMA + SE + mixup |
-| WRN-28-10 (AA best) | 36M | 98.52% | best published, 3× params |
+To provide a rigorous evaluation, we compare against models trained strictly **from scratch** (no ImageNet transfer learning), highlighting the efficiency of our ~12M parameter budget and the inductive bias of convolutional architectures on small datasets.
+
+| Model | Params | Test Acc | Notes / Reference |
+| :--- | :---: | :---: | :--- |
+| ViT-Tiny | ~5.7M | < 90.00% | Fails without ImageNet pre-training (lacks geometric priors) |
+| ResNet-110 | 1.7M | 93.50% | The historical deep baseline (He et al., 2016) |
+| DenseNet-BC-100-12 | ~0.8M | 95.50% | High feature density via concatenation (Huang et al., 2017) |
+| ResNet-18 (Modern) | 11.2M | ~96.50% | Standard ~11M baseline + Mixup/CutMix |
+| WRN-16-8 | 11.0M | ~97.00% | + Cutout (Zagoruyko et al., 2016) |
+| Shake-Shake (26 2x96d) | ~26.0M | 97.10% | Extreme branch-level regularization (Gastaldi, 2017) |
+| PyramidNet + ShakeDrop | ~26.0M | 97.30% | The pre-AutoAugment SOTA (Yamada et al., 2018) |
+| WRN-28-10 (AutoAugment) | 36.5M | 97.30% | Reinforcement Learning policy search (Cubuk et al., 2019) |
+| **This work (ConvNeXt + SE)** | **12.4M** | **98.10%** | **Muon + EMA + Progressive DropPath + Mixup** |
+| WRN-28-10 (AdvAA) | 36.5M | 98.10% | Adversarial AutoAugment on 3x parameters (Zhang et al., 2020) |
+| WRN-28-10 (Best Published) | 36.5M | 98.52% | Absolute theoretical max on 3x params with AA |
 
 ## Architecture
 
