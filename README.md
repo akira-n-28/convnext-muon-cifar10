@@ -114,7 +114,7 @@ EMA gently improving through the very end.
 ## Setup
 
 ```bash
-git clone https://github.com/<your-username>/convnext-muon-cifar10.git
+git clone https://github.com/akira-n-28/convnext-muon-cifar10.git
 cd convnext-muon-cifar10
 pip install -r requirements.txt
 ```
@@ -181,12 +181,8 @@ print(f"5-crop:    {acc_5crop*100:.2f}%")
 
 ## Pretrained checkpoint
 
-Download from [Hugging Face Hub](https://huggingface.co/<your-username>/convnext-muon-cifar10)
-*(or replace with your release URL).*
+Download from [Hugging Face Hub](https://huggingface.co/AkiraN28/convnext-muon-cifar10)
 
-```bash
-wget https://huggingface.co/<your-username>/convnext-muon-cifar10/resolve/main/best_600ep_compile.pt
-```
 
 ## Possible future improvements
 
