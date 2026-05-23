@@ -38,14 +38,14 @@ CIFAR-adapted **ConvNeXt** (Liu et al. 2022) with **selective Squeeze-and-Excita
   see motivation below
 - LayerScale init 1e-6, DropPath 0–0.15 (linear)
 
-### Why SE only on stage 2
+### Why SE only on stage 3
 
 Squeeze-and-Excitation adds channel attention via a global-pool → bottleneck →
 sigmoid gate, applied to the main branch before the residual merge. Placing SE
 in *every* stage would either over-bottleneck early stages (with `C=64` and
 `reduction=16` the bottleneck collapses to 4 units, hurting capacity) or add
 parameter overhead disproportionate to the gain in the late stage with only 3
-blocks. Stage 2 is the sweet spot: `C=256` gives a healthy 16-unit bottleneck,
+blocks. Stage 3 is the sweet spot: `C=256` gives a healthy 16-unit bottleneck,
 and the 9 blocks accumulate the most representational depth in the network,
 so per-block channel reweighting compounds well.
 
@@ -89,11 +89,12 @@ if ema is not None:
 Same applies when saving the live model — strip the compile wrapper before
 `state_dict()` so the checkpoint can be reloaded into a non-compiled model.
 
-**4. TTA saturates under aggressive augmentation.** Flip-TTA and 5-crop+flip TTA
-do *not* improve the EMA result beyond numerical noise (σ ≈ 0.14pp at p=0.98 on
-10k samples): −0.02pp and −0.10pp respectively. The combination of
-RandomHorizontalFlip during training + EMA model averaging already saturates the
-calibration benefit that TTA usually provides.
+**4. TTA degrades performance due to Squeeze-and-Excitation spatial bias.** Flip-TTA and 5-crop 
+TTA do *not* improve the EMA result, actually causing a degradation (−0.02pp and −0.10pp respectively). 
+While TTA usually benefits standard ConvNets, the SE blocks in Stage 3 compute channel-wise attention 
+maps based on Global Average Pooling. Applying spatial shifts (cropping) or reflections (flipping) 
+at inference time distorts the global spatial priors the SE gates rely on, leading to miscalibrated 
+channel re-weighting. For this architecture, a single raw forward pass yields the true peak performance.
 
 **5. Set `min_lr > 0` in cosine schedule.** With `min_lr=0`, the final ~50 epochs
 run at LR ≈ 1e-13 and contribute nothing. `min_lr=1e-6` (0.1% of peak) keeps the
